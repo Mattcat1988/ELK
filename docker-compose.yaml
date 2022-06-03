@@ -28,8 +28,8 @@ services:
     container_name: Logstash
     restart: always
     volumes:
-      - logstash:logstash_dir
-    command: logstash -f /logstash_dir/logstash.conf
+      - pipeline/:/usr/share/logstash/pipeline/
+      - settings:/usr/share/logstash/config/
     depends_on:
       - elasticsearch
     ports:
@@ -54,7 +54,9 @@ services:
 volumes:
   elasticsearch-data-volume:
     driver: local
-  logstash:
+  pipeline:
+    driver: local
+  settings:
     driver: local
 networks:
   elk:
