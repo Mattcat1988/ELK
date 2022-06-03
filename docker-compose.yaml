@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   elasticsearch:
-    image: bitnami/elasticsearch
+    image: elasticsearch:8.2.2
     container_name: elasticsearh
     restart: always
     environment:
@@ -24,7 +24,7 @@ services:
       - elk
 
   Logstash:
-    image: logstash:7.16.2
+    image: logstash:8.2.2
     container_name: Logstash
     restart: always
     volumes:
@@ -40,7 +40,7 @@ services:
       - elk
   kibana:
     container_name: kibana
-    image: bitnami/kibana:latest
+    image: bitnami/kibana:8.2.2
     restart: always
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
