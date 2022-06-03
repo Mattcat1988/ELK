@@ -28,7 +28,7 @@ services:
     container_name: Logstash
     restart: always
     volumes:
-      - pipeline/:/usr/share/logstash/pipeline/
+      - pipeline:/usr/share/logstash/pipeline/
       - settings:/usr/share/logstash/config/
     depends_on:
       - elasticsearch
