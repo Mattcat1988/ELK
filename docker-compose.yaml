@@ -1,0 +1,61 @@
+version: '3.7'
+services:
+  elasticsearch:
+    image: bitnami/elasticsearch
+    container_name: elasticsearh
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data-volume:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elk
+
+  Logstash:
+    image: logstash:7.16.2
+    container_name: Logstash
+    restart: always
+    volumes:
+      - logstash:logstash_dir
+    command: logstash -f /logstash_dir/logstash.conf
+    depends_on:
+      - elasticsearch
+    ports:
+      - 9600:9600
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+  kibana:
+    container_name: kibana
+    image: bitnami/kibana:latest
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+volumes:
+  elasticsearch-data-volume:
+    driver: local
+  logstash:
+    driver: local
+networks:
+  elk:
+    driver: bridge
